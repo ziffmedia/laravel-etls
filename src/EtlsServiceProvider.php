@@ -4,12 +4,20 @@ namespace ZiffMedia\LaravelEtls;
 
 use Illuminate\Support\ServiceProvider;
 use SplFileInfo;
+use Symfony\Component\Finder\Finder;
+use ZiffMedia\LaravelEtls\Commands\RunCommand;
 
 class EtlsServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
-        $this->discoverEtls();
+        if ($this->app->runningInConsole()) {
+            $this->discoverEtls();
+
+            $this->commands([
+                RunCommand::class
+            ]);
+        }
     }
 
     protected function discoverEtls()
@@ -24,7 +32,7 @@ class EtlsServiceProvider extends ServiceProvider
 
             $instance = new $className;
 
-            // put these somewhere
+            // @todo put these somewhere
         });
     }
 }

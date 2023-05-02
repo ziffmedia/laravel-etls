@@ -1,0 +1,12 @@
+/node_modules
+yarn.*
+composer.phar
+composer.lock
+phpunit.xml
+.phpunit.result.cache
+.DS_Store
+Thumbs.db
+/.idea
+/nova-app
+/vendor/
+/demo/vendor
