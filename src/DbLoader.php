@@ -78,6 +78,13 @@ class DbLoader implements Loader
         return $this;
     }
 
+    public function updateColumn($updateColumn): static
+    {
+        $this->updateColumn = $updateColumn;
+
+        return $this;
+    }
+
     public function uniqueColumns($uniqueColumns): static
     {
         $this->uniqueColumns = $uniqueColumns;
@@ -287,5 +294,18 @@ class DbLoader implements Loader
         $this->runtimeInfo['update_query'] = $sql;
 
         $this->updateStatement = $this->connection->getPdo()->prepare($sql);
+    }
+
+    public function getIncrementalLastValue(): string
+    {
+        // $grammar = $this->connection->getQueryGrammar();
+
+        return $this->connection->query()
+            ->select($this->updateColumn)
+            ->from($this->table)
+            ->whereNotNull($this->updateColumn)
+            ->orderByDesc($this->updateColumn)
+            ->limit(1)
+            ->value($this->updateColumn);
     }
 }

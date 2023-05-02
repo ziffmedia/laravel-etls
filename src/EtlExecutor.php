@@ -23,16 +23,18 @@ class EtlExecutor
         return $this;
     }
 
-    public function execute(AbstractEtl $etl, $incremental = false): array
+    public function execute(AbstractEtl $etl, bool $incremental = false): array
     {
         $extractor = $etl->extractor();
         $loader = $etl->loader();
 
         $loader->prepare();
 
+        $incrementalValue = $incremental ? $loader->getIncrementalLastValue() : false;
+
         $iteration = 0;
 
-        foreach ($extractor->extract($incremental) as $extractedData) {
+        foreach ($extractor->extract($incrementalValue) as $extractedData) {
             $this->runtimeInfo['extractor'] = $extractor->getRuntimeInfo();
 
             $transformedData = $etl->transform($extractedData);

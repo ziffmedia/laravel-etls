@@ -49,10 +49,12 @@ class DbExtractor implements Extractor
         return $this->uniqueColumns;
     }
 
-    // public function createFullHashedIndex()
-    // {
-    //     // md5 hash of all unique columns concat'd
-    // }
+    public function updateColumn($updateColumn): static
+    {
+        $this->updateColumn = $updateColumn;
+
+        return $this;
+    }
 
     public function getChunkSize(): int
     {
@@ -64,13 +66,13 @@ class DbExtractor implements Extractor
         return $this->runtimeInfo;
     }
 
-    public function extract($incremental = false): Generator
+    public function extract(false|string $incremental = false): Generator
     {
         $hashedQuery = $this->createHashedQuery();
         $lastId = null;
 
         if ($incremental) {
-            $this->modifyQueryForIncremental($hashedQuery);
+            $hashedQuery->whereDate($this->updateColumn, '>=', $incremental);
         }
 
         do {
@@ -140,11 +142,6 @@ class DbExtractor implements Extractor
 
     public function modifyQueryForIncremental(Builder $query)
     {
-        // $lastUpdateTimeQuery = $this->connection->query()
-        //     ->select($this->updateColumn)
-        //     ->from($query->getBindings()['table'])
-        //     ->value($this->updateColumn);
-        //
-        // dd($lastUpdateTimeQuery);
+
     }
 }

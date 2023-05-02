@@ -8,13 +8,14 @@ use Illuminate\Console\Command;
 
 class RunCommand extends Command
 {
-    protected $signature = 'etls:run {etl}';
+    protected $signature = 'etls:run {--incremental} {etl}';
 
     protected $description = 'Run ETLs';
 
     public function handle()
     {
         $etlName = $this->argument('etl');
+        $isIncremental = $this->option('incremental');
 
         $etlClass = 'App\Etls\\'.$etlName;
 
@@ -44,7 +45,7 @@ class RunCommand extends Command
             $etlExecutor->withRuntimeInfoCallback($outputter);
         }
 
-        $etlExecutor->execute($etl);
+        $etlExecutor->execute($etl, $isIncremental);
 
         if ($this->output->isVerbose()) {
             $this->output->writeln("\nComplete");

@@ -6,5 +6,5 @@ use Generator;
 
 interface Extractor
 {
-    public function extract($incremental = false): Generator;
+    public function extract(false|string $incrementalValue = false): Generator;
 }
