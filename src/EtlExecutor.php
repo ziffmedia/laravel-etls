@@ -49,7 +49,7 @@ class EtlExecutor
 
             $this->runtimeInfo['loader'] = $loader->getRuntimeInfo();
 
-            if ((++$iteration % $this->runtimeInfoCallbackIterations) === 0 && $this->runtimeInfoCallback !== null) {
+            if (($iteration++ % $this->runtimeInfoCallbackIterations) === 0 && $this->runtimeInfoCallback !== null) {
                 ($this->runtimeInfoCallback)($this->runtimeInfo, $iteration);
             }
         }

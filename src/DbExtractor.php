@@ -72,7 +72,7 @@ class DbExtractor implements Extractor
         $lastId = null;
 
         if ($incremental) {
-            $hashedQuery->whereDate($this->updateColumn, '>=', $incremental);
+            $hashedQuery->where($this->updateColumn, '>=', $incremental);
         }
 
         do {
