@@ -3,8 +3,11 @@
 namespace ZiffMedia\LaravelEtls;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
+use ZiffMedia\LaravelEtls\Commands\InfoCommand;
+use ZiffMedia\LaravelEtls\Commands\ListCommand;
 use ZiffMedia\LaravelEtls\Commands\RunCommand;
 
 class EtlsServiceProvider extends ServiceProvider
@@ -15,6 +18,8 @@ class EtlsServiceProvider extends ServiceProvider
             $this->discoverEtls();
 
             $this->commands([
+                InfoCommand::class,
+                ListCommand::class,
                 RunCommand::class
             ]);
         }
@@ -26,13 +31,17 @@ class EtlsServiceProvider extends ServiceProvider
 
         $finder = new Finder();
 
-        collect($finder->in($etlsPath)->files()->name('*.php'))->each(function (SplFileInfo $file) {
+        $collection = collect($finder->in($etlsPath)->files()->name('*.php'))->mapWithKeys(function (SplFileInfo $file) {
             $strippedBaseName = str_replace('.php', '', $file->getBasename());
             $className = 'App\Etls\\'.$strippedBaseName;
 
-            $instance = new $className;
+            if (Str::endsWith($strippedBaseName, 'Etl')) {
+                $strippedBaseName = Str::substr($strippedBaseName, 0, -3);
+            }
 
-            // @todo put these somewhere
+            return [$strippedBaseName => $className];
         });
+
+        config()->set('etls.etl_classes', $collection->toArray());
     }
 }

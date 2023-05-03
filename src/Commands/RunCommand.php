@@ -3,6 +3,7 @@
 namespace ZiffMedia\LaravelEtls\Commands;
 
 use App\Etls\MerchantSeoDataEtl;
+use Illuminate\Support\Str;
 use ZiffMedia\LaravelEtls\EtlExecutor;
 use Illuminate\Console\Command;
 
@@ -17,17 +18,17 @@ class RunCommand extends Command
         $etlName = $this->argument('etl');
         $isIncremental = $this->option('incremental');
 
-        $etlClass = 'App\Etls\\'.$etlName;
+        $etls = array_change_key_case(config('etls.etl_classes'), CASE_LOWER);
 
-        if (! class_exists($etlClass)) {
-            $this->error("Could not load ETL class $etlClass");
+        $etlName = Str::of($etlName)->remove(['-', '_'])->lower()->toString();
+
+        if (!isset($etls[$etlName])) {
+            $this->output->error('That ETL was not found');
 
             return 1;
         }
 
-        $etl = new $etlClass;
-
-        // @todo get the etl
+        $etl = new $etls[$etlName];
 
         $etlExecutor = new EtlExecutor();
 
