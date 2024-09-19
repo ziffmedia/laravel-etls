@@ -306,6 +306,6 @@ class DbLoader implements Loader
             ->whereNotNull($this->updateColumn)
             ->orderByDesc($this->updateColumn)
             ->limit(1)
-            ->value($this->updateColumn);
+            ->value($this->updateColumn) ?? '';
     }
 }
