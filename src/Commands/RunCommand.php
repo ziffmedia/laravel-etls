@@ -2,7 +2,6 @@
 
 namespace ZiffMedia\LaravelEtls\Commands;
 
-use App\Etls\MerchantSeoDataEtl;
 use Illuminate\Support\Str;
 use ZiffMedia\LaravelEtls\EtlExecutor;
 use Illuminate\Console\Command;
@@ -51,5 +50,7 @@ class RunCommand extends Command
         if ($this->output->isVerbose()) {
             $this->output->writeln("\nComplete");
         }
+
+        return 0;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace ZiffMedia\LaravelEtls\Commands;
 
-use App\Etls\MerchantSeoDataEtl;
 use Illuminate\Support\Str;
 use ZiffMedia\LaravelEtls\AbstractEtl;
 use ZiffMedia\LaravelEtls\EtlExecutor;
@@ -58,5 +57,7 @@ class InfoCommand extends Command
             $this->output->writeln('Extractor query: ');
             $this->output->writeln($extractorQuery->toSql());
         }
+
+        return 0;
     }
 }
